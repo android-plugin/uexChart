@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"
+    content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    
+    <script type="text/javascript">
+    window.uexOnload = function(type){
+        uexWindow.setReportKey(0,1);
+        uexWindow.onKeyPressed = function(keyCode){
+            uexChart.closePieChart();
+            uexWindow.close(-1);
+        }
+        uexChart.onValueSelected = function(data){
+            alert(data);
+        }
+    }
+    
+    function openPieChart(index){
+        var param1 = {
+            id:index,
+            top:500,
+            isScrollWithWeb:true,
+            data:[
+                {
+                    title:"title1",
+                    color:"#c12552",
+                    value:0.9
+                },
+                {
+                    title:"title2",
+                    color:"#ff6600",
+                    value:0.5
+                },
+                {
+                    title:"title3",
+                    color:"#f5c700",
+                    value:0.6
+                },
+                {
+                    title:"title4",
+                    color:"#6a961f",
+                    value:0.4
+                },
+                {
+                    title:"title5",
+                    color:"#b36435",
+                    value:0.8
+                }
+            ]
+        };
+        var data1 = JSON.stringify(param1);
+
+        var param2 = {
+            id:index,
+            left:0,
+            top:500,
+            width:800,
+            height:800,
+            bgColor:"#cccccc",
+            showUnit:true,
+            unit:"cc",
+            showCenter:true,
+            centerColor:"#00000000",
+            centerTitle:"我是标题!",
+            centerSummary:"我是子标题",
+            centerRadius:55,
+            centerTransRadius:57,
+            valueTextColor:"#ffffff",
+            valueTextSize:15,
+            desc:"测试饼状图功能",
+            descTextColor:"#000000",
+            descTextSize:9,
+            showTitle:true,
+            showValue:true,
+            showPercent:false,
+            showLegend:true,
+            legendPosition:"bottom",
+            duration:800,
+            data:[
+                {
+                    title:"title1",
+                    color:"#c12552",
+                    value:0.9
+                },
+                {
+                    title:"title2",
+                    color:"#ff6600",
+                    value:0.5
+                },
+                {
+                    title:"title3",
+                    color:"#f5c700",
+                    value:0.6
+                },
+                {
+                    title:"title4",
+                    color:"#6a961f",
+                    value:0.4
+                },
+                {
+                    title:"title5",
+                    color:"#b36435",
+                    value:0.8
+                }
+            ]
+        };
+        var data2 = JSON.stringify(param2);
+        
+        if(index == 1){
+            uexChart.openPieChart(data1);
+        }else{
+            uexChart.openPieChart(data2);
+        }
+        
+    }
+
+    function closePieChart(id){
+        var params = [id];
+        var data = JSON.stringify(params);
+        uexChart.closePieChart(data);
+    }
+
+</script>
+</head>
+
+<body>
+    <div class="tit">pieChart</div>
+    <div class="conbor">
+        <div class="consj">
+            <input class="btn" type="button" value="open(1)" onclick="openPieChart(1);">
+            <input class="btn" type="button" value="close(1)" onclick="closePieChart(1);"><br>
+            <input class="btn" type="button" value="open(2)" onclick="openPieChart(2);">
+            <input class="btn" type="button" value="close(2)" onclick="closePieChart(2);">
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            <br><br><br><br><br><br><br><br><br>
+            <input class="btn" type="button" value="close(All)" onclick="uexChart.closePieChart();">
+        </div>
+    </div>
+</body>
+</html>

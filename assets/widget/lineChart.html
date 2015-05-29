@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"
+    content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    
+    <script type="text/javascript">
+    window.uexOnload = function(type){
+        uexWindow.setReportKey(0,1);
+        uexWindow.onKeyPressed = function(keyCode){
+            uexChart.closeLineChart();
+            uexWindow.close(-1);
+        }
+        uexChart.onValueSelected = function(data){
+            alert(data);
+        }
+    }
+    
+    function openLineChart(){
+        var param = {
+            id:1,
+            left:500,
+            top:500,
+            width:600,
+            height:600,
+            bgColor:"#00000000",
+            showUnit:true,
+            unit:"cc",
+            valueTextColor:"#000000",
+            valueTextSize:15,
+            desc:"测试折线图功能",
+            descTextColor:"#000000",
+            descTextSize:12,
+            showLegend:true,
+            legendPosition:"bottom",
+            duration:800,
+            lines:[
+                {
+                    lineName:"line1",
+                    lineColor:"#ff6600",
+                    lineWidth:2,
+                    circleColor:"#ff6600",
+                    circleSize:3,
+                    isSolid:true,
+                    data:[
+                        {xValue:2001,yValue:5},
+                        {xValue:2002,yValue:1},
+                        {xValue:2003,yValue:6},
+                        {xValue:2004,yValue:4},
+                        {xValue:2005,yValue:2},
+                        {xValue:2006,yValue:3},
+                        {xValue:2007,yValue:8},
+                        {xValue:2008,yValue:10},
+                        {xValue:2009,yValue:2},
+                        {xValue:2010,yValue:6}
+                    ]
+                }
+            ]
+        };
+        var data1 = JSON.stringify(param);
+        uexChart.openLineChart(data1);
+    }
+    
+    function openMultiLineChart(){
+        var param = {
+            id:2,
+            left:0,
+            top:700,
+            width:600,
+            height:600,
+            bgColor:"#cccccc",
+            showUnit:true,
+            showValue:false,
+            unit:"cc",
+            valueTextColor:"#ffffff",
+            valueTextSize:15,
+            desc:"测试折线图功能",
+            descTextColor:"#000000",
+            descTextSize:12,
+            showLegend:true,
+            legendPosition:"right",
+            duration:800,
+            isScrollWithWeb:true,
+            lines:[
+                {
+                    lineName:"line1",
+                    lineColor:"#ff6600",
+                    lineWidth:2,
+                    circleColor:"#ff6600",
+                    circleSize:3,
+                    isSolid:true,
+                    data:[
+                        {xValue:2001,yValue:5},
+                        {xValue:2002,yValue:1},
+                        {xValue:2003,yValue:6},
+                        {xValue:2004,yValue:4},
+                        {xValue:2005,yValue:2},
+                        {xValue:2006,yValue:3},
+                        {xValue:2007,yValue:8},
+                        {xValue:2008,yValue:10},
+                        {xValue:2009,yValue:2},
+                        {xValue:2010,yValue:6}
+                    ]
+                },
+                {
+                    lineName:"line2",
+                    lineColor:"#6a961f",
+                    lineWidth:4,
+                    circleColor:"#6a961f",
+                    circleSize:4,
+                    isSolid:false,
+                    data:[
+                        {xValue:2001,yValue:10},
+                        {xValue:2002,yValue:3},
+                        {xValue:2003,yValue:3},
+                        {xValue:2004,yValue:2},
+                        {xValue:2005,yValue:8},
+                        {xValue:2006,yValue:2},
+                        {xValue:2007,yValue:5},
+                        {xValue:2008,yValue:2},
+                        {xValue:2009,yValue:5},
+                        {xValue:2010,yValue:4}
+                    ]
+                }
+            ]
+        };
+        var data1 = JSON.stringify(param);
+        uexChart.openLineChart(data1);
+    }
+    function closeLineChart(id){
+        var params = [id];
+        var data = JSON.stringify(params);
+        uexChart.closeLineChart(data);
+    }
+</script>
+</head>
+
+<body>
+    <div class="tit">LineChart</div>
+    <div class="conbor">
+        <div class="consj">
+            <input class="btn" type="button" value="open(1)" onclick="openLineChart();">
+            <input class="btn" type="button" value="close(1)" onclick="closeLineChart(1);"><br>
+            <input class="btn" type="button" value="open(2)" onclick="openMultiLineChart();">
+            <input class="btn" type="button" value="close(2)" onclick="closeLineChart(2);">
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            <br><br><br><br><br><br><br><br><br>
+            <input class="btn" type="button" value="close(All)" onclick="uexChart.closeLineChart();">
+        </div>
+    </div>
+</body>
+</html>
