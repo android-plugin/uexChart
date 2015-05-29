@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"
+    content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    
+    <script type="text/javascript">
+    window.uexOnload = function(type){
+        uexWindow.setReportKey(0,1);
+        uexWindow.onKeyPressed = function(keyCode){
+            uexChart.closeBarChart();
+            uexWindow.close(-1);
+        }
+        uexChart.onValueSelected = function(data){
+            alert(data);
+        }
+    }
+    
+    function openMultiBarChart(){
+        var param = {
+            id:2,
+            left:500,
+            top:700,
+            width:600,
+            height:600,
+            bgColor:"#cccccc",
+            showUnit:true,
+            unit:"cc",
+            valueTextColor:"#ffffff",
+            valueTextSize:15,
+            showValue:false,
+            desc:"测试柱状图功能",
+            descTextColor:"#000000",
+            descTextSize:12,
+            showLegend:true,
+            legendPosition:"right",
+            duration:1800,
+            isScrollWithWeb:true,
+            bars:
+                [
+                    {
+                        barName:"bar1",
+                        barColor:"#c12552",
+                        data:[
+                            {xValue:2001,yValue:5},
+                            {xValue:2002,yValue:1},
+                            {xValue:2003,yValue:6},
+                            {xValue:2004,yValue:4},
+                            {xValue:2005,yValue:2},
+                            {xValue:2006,yValue:3}
+                         ]
+                     },
+                     {
+                        barName:"bar2",
+                        barColor:"#ff6600",
+                        data:[
+                            {xValue:2001,yValue:10},
+                            {xValue:2002,yValue:3},
+                            {xValue:2003,yValue:3},
+                            {xValue:2004,yValue:2},
+                            {xValue:2005,yValue:8},
+                            {xValue:2006,yValue:2}
+                        ]
+                    }
+                ]
+            };
+        var data1 = JSON.stringify(param);
+        uexChart.openBarChart(data1);
+        
+    }
+    
+    function openBarChart(){
+        var param = {
+            id:1,
+            left:0,
+            top:500,
+            width:600,
+            height:600,
+            bgColor:"#00000000",
+            showUnit:true,
+            unit:"cc",
+            valueTextColor:"#000000",
+            valueTextSize:15,
+            duration:1800,
+            bars:[
+                    {
+                        barName:"bar1",
+                        barColor:"#c12552",
+                        data:
+                            [
+                                {xValue:2001,yValue:5},
+                                {xValue:2002,yValue:1},
+                                {xValue:2003,yValue:6},
+                                {xValue:2004,yValue:4},
+                                {xValue:2005,yValue:2},
+                                {xValue:2006,yValue:3}
+                            ]
+                        }
+                    ]
+                };
+        var data1 = JSON.stringify(param);
+        uexChart.openBarChart(data1);
+    }
+    function closeBarChart(id){
+        var params = [id];
+        var data = JSON.stringify(params);
+        uexChart.closeBarChart(data);
+    }
+</script>
+</head>
+
+<body>
+    <div class="tit">BarChart</div>
+    <div class="conbor">
+        <div class="consj">
+            <input class="btn" type="button" value="open(1)" onclick="openBarChart();">
+            <input class="btn" type="button" value="close(1)" onclick="closeBarChart(1);"><br>
+            <input class="btn" type="button" value="open(2)" onclick="openMultiBarChart();">
+            <input class="btn" type="button" value="close(2)" onclick="closeBarChart(2);">
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            <br><br><br><br><br><br><br><br><br>
+            <input class="btn" type="button" value="close(All)" onclick="uexChart.closeBarChart();">
+        </div>
+    </div>
+</body>
+</html>

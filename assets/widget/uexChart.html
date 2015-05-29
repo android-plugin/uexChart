@@ -1,0 +1,165 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"
+    content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    
+    <script type="text/javascript">
+        function openWin(name){
+            uexWindow.open(name, '0', name+".html", '2', '', '', 0);
+        }
+        window.uexOnload = function(type){
+            //openPieChart(1);
+            //openLineChart();
+            //openBarChart()
+        }
+    function openLineChart(){
+        var param = {
+            id:1,
+            left:500,
+            top:500,
+            width:600,
+            height:600,
+            bgColor:"#00000000",
+            showUnit:true,
+            unit:"cc",
+            valueTextColor:"#000000",
+            valueTextSize:15,
+            desc:"测试折线图功能",
+            descTextColor:"#000000",
+            descTextSize:12,
+            showLegend:true,
+            legendPosition:"right",
+            duration:800,
+            lines:[
+                {
+                    lineName:"line1",
+                    lineColor:"#ff6600",
+                    lineWidth:2,
+                    circleColor:"#ff6600",
+                    circleSize:3,
+                    isSolid:true,
+                    data:[
+                        {xValue:2001,yValue:5},
+                        {xValue:2002,yValue:1},
+                        {xValue:2003,yValue:6},
+                        {xValue:2004,yValue:4},
+                        {xValue:2005,yValue:2},
+                        {xValue:2006,yValue:3},
+                        {xValue:2007,yValue:8},
+                        {xValue:2008,yValue:10},
+                        {xValue:2009,yValue:2},
+                        {xValue:2010,yValue:6}
+                    ]
+                }
+            ]
+        };
+        var data1 = JSON.stringify(param);
+        uexChart.openLineChart(data1);
+    }
+    function openBarChart(){
+        var param = {
+            id:1,
+            left:0,
+            top:500,
+            width:600,
+            height:600,
+            bgColor:"#00000000",
+            showUnit:true,
+            unit:"cc",
+            valueTextColor:"#000000",
+            valueTextSize:15,
+            duration:1800,
+            bars:[
+                    {
+                        barName:"bar1",
+                        barColor:"#c12552",
+                        data:
+                            [
+                                {xValue:2001,yValue:5},
+                                {xValue:2002,yValue:1},
+                                {xValue:2003,yValue:6},
+                                {xValue:2004,yValue:4},
+                                {xValue:2005,yValue:2},
+                                {xValue:2006,yValue:3}
+                            ]
+                        }
+                    ]
+                };
+        var data1 = JSON.stringify(param);
+        uexChart.openBarChart(data1);
+    }
+        function openPieChart(index){
+            var param2 = {
+                id:index,
+                left:0,
+                top:500,
+                width:800,
+                height:800,
+                bgColor:"#cccccc",
+                showUnit:true,
+                unit:"cc",
+                showCenter:true,
+                centerColor:"#00000000",
+                centerTitle:"我是标题!",
+                centerSummary:"我是子标题",
+                centerRadius:55,
+                centerTransRadius:57,
+                valueTextColor:"#ffffff",
+                valueTextSize:15,
+                desc:"测试饼状图功能",
+                descTextColor:"#000000",
+                descTextSize:9,
+                showTitle:true,
+                showValue:true,
+                showPercent:false,
+                showLegend:true,
+                legendPosition:"bottom",
+                duration:800,
+                data:[
+                    {
+                        title:"title1",
+                        color:"#c12552",
+                        value:0.9
+                    },
+                    {
+                        title:"title2",
+                        color:"#ff6600",
+                        value:0.5
+                    },
+                    {
+                        title:"title3",
+                        color:"#f5c700",
+                        value:0.6
+                    },
+                    {
+                        title:"title4",
+                        color:"#6a961f",
+                        value:0.4
+                    },
+                    {
+                        title:"title5",
+                        color:"#b36435",
+                        value:0.8
+                    }
+                ]
+            };
+            var data2 = JSON.stringify(param2);
+            uexChart.openPieChart(data2);
+        }
+    </script>
+</head>
+
+<body>
+    <div class="tit">uexChart</div>
+    <div class="conbor">
+        <div class="consj">
+            <input class="btn" type="button" value="pieChart" onclick="openWin('pieChart');">
+            <input class="btn" type="button" value="lineChart" onclick="openWin('lineChart');">
+            <input class="btn" type="button" value="barChart" onclick="openWin('barChart');">
+        </div>
+    </div>
+</body>
+</html>

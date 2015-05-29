@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest>
+    <activity android:name="org.zywx.wbpalmstar.plugin.uexchart.PieChartActivity"></activity>
+    <activity android:name="org.zywx.wbpalmstar.plugin.uexchart.LineChartActivity"></activity>
+    <activity android:name="org.zywx.wbpalmstar.plugin.uexchart.BarChartActivity"></activity>
+</manifest>
