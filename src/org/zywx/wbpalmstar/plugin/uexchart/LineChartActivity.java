@@ -5,22 +5,28 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.Legend;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.Highlight;
+import com.github.mikephil.charting.utils.LargeValueFormatter;
 
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.plugin.uexchart.EUExChart.OnValueSelectedListener;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.BaseUnit;
+import org.zywx.wbpalmstar.plugin.uexchart.vo.ExtraLine;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.LineChartVO;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.LineUnitData;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LineChartActivity extends Activity implements OnChartValueSelectedListener{
+public class LineChartActivity extends Activity implements OnChartValueSelectedListener {
 
     public static final String TAG = "LineChartActivity";
     private LineChart mChart;
@@ -44,14 +50,16 @@ public class LineChartActivity extends Activity implements OnChartValueSelectedL
         initChartView(mData);
     }
 
-    private void setData(List<LineUnitData> list) {
+    private void setData(LineChartVO chartVO) {
+        List<String> xDatas = chartVO.getxData();
+        List<LineUnitData> list = chartVO.getLines();
         ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
         ArrayList<String> xVals = new ArrayList<String>();
         for (int j = 0; j < list.size(); j++) {
             LineUnitData line = list.get(j);
             List<BaseUnit> datas = line.getData();
-            for (int i = 0; i < datas.size(); i++) {
-                String title = datas.get(i).getxValue();
+            for (int i = 0; i < xDatas.size(); i++) {
+                String title = xDatas.get(i);
                 if(!xVals.contains(title)){
                     xVals.add(title);
                 }
@@ -60,7 +68,7 @@ public class LineChartActivity extends Activity implements OnChartValueSelectedL
             ArrayList<Entry> yVals = new ArrayList<Entry>();
 
             for (int i = 0; i < datas.size(); i++) {
-                yVals.add(new Entry(datas.get(i).getyValue(), i));
+                yVals.add(new Entry(datas.get(i).getyValue(), datas.get(i).getIndex()));
             }
 
             // create a dataset and give it a type
@@ -69,54 +77,108 @@ public class LineChartActivity extends Activity implements OnChartValueSelectedL
             float solid = 10f;
             if(line.isSolid()) solid = 0f;
             set1.enableDashedLine(10f, solid, 10f);
+            set1.setValueTextColor(chartVO.getValueTextColor());
+            set1.setValueTextSize(chartVO.getValueTextSize());
             set1.setColor(line.getLineColor());
             set1.setCircleColor(line.getCircleColor());
             set1.setLineWidth(line.getLineWidth());
             set1.setCircleSize(line.getCircleSize());
-            set1.setFillAlpha(65);
-            set1.setFillColor(Color.BLACK);
+            set1.setDrawValues(chartVO.isShowValue());
+            set1.setDrawCubic(false);
+            if (line.getCubicIntensity() > 0){
+                set1.setDrawCubic(true);
+                set1.setCubicIntensity(line.getCubicIntensity());
+            }
+            set1.setDrawFilled(false);
+//            if (line.isHasFillColor()){
+//                set1.setDrawFilled(true);
+//                set1.setFillAlpha(line.getAlpha());
+//                set1.setFillColor(line.getFillColor());
+//            }
             dataSets.add(set1);
         }
 
         // create a data object with the datasets
         LineData data = new LineData(xVals, dataSets);
-
         // set data
         mChart.setData(data);
     }
-    
+
+    @Override
+    public void onValueSelected(Entry entry, int i, Highlight highlight) {
+        if(mListener != null){
+            mListener.onValueSelected(entry.getVal());
+        }
+    }
+
     @Override
     public void onNothingSelected() {
         
     }
 
-    @Override
-    public void onValueSelected(Entry arg0, int arg1) {
-        if(mListener != null){
-            mListener.onValueSelected(arg0.getVal());
-        }
-    }
-
-    private void initChartView(LineChartVO chart){
-        mChart.setDrawYValues(chart.isShowValue());
-        mChart.setDrawGridBackground(false);
+    private void initChartView(LineChartVO chart) {
+        mChart.setDrawGridBackground(true);
+        mChart.setGridBackgroundColor(Color.TRANSPARENT);
         mChart.setDescription(chart.getDesc());
-
-        // if disabled, scaling can be done on x- and y-axis separately
-        mChart.animateX(chart.getDuration());
-        mChart.setDrawUnitsInChart(chart.isShowUint());
-        mChart.setUnit(chart.getUnit());
-        mChart.setBackgroundColor(chart.getBgColor());
-        mChart.setDrawLegend(chart.isShowLegend());//is show legend(tuli)
-        mChart.setValueTextColor(chart.getValueTextColor());
-        mChart.setDescriptionTextColor(chart.getDescTextColor());
+        mChart.setDescriptionColor(chart.getDescTextColor());
         mChart.setDescriptionTextSize(chart.getDescTextSize());
-        mChart.setValueTextSize(chart.getValueTextSize());
-        setData(chart.getLines());
+
+        mChart.animateX(chart.getDuration());
+        mChart.setBackgroundColor(chart.getBgColor());
+        mChart.setDrawBorders(true);
+        mChart.setBorderColor(chart.getBorderColor());
+        setData(chart);
         Legend l = mChart.getLegend();
+        l.setEnabled(chart.isShowLegend());
         l.setTextColor(chart.getDescTextColor());
         l.setTextSize(chart.getDescTextSize());
         l.setPosition(chart.getLegendPosition());
+
+        XAxis xAxis = mChart.getXAxis();
+        xAxis.setTextSize(chart.getDescTextSize());
+        xAxis.setTextColor(chart.getDescTextColor());
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(true);
+        xAxis.setGridColor(chart.getBorderColor());
+
+        YAxis yAxisL = mChart.getAxisLeft();
+        yAxisL.setTextColor(chart.getDescTextColor());
+        yAxisL.setTextSize(chart.getDescTextSize());
+        yAxisL.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+        yAxisL.setDrawGridLines(true);
+        yAxisL.setGridColor(chart.getBorderColor());
+        if (chart.isHasMax()) yAxisL.setAxisMaxValue(chart.getMaxValue());
+        if (chart.isHasMin()) yAxisL.setAxisMinValue(chart.getMinValue());
+        yAxisL.setStartAtZero(false);
+        if (chart.isShowUnit()){
+            yAxisL.setValueFormatter(new LargeValueFormatter(chart.getUnit()));
+        }
+
+        YAxis yAxisR = mChart.getAxisRight();
+        yAxisR.setTextColor(chart.getDescTextColor());
+        yAxisR.setTextSize(chart.getDescTextSize());
+        yAxisR.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+        mChart.getAxisRight().setEnabled(false);
+
+        setExtraLines(chart, yAxisL);
     }
-    
+
+    private void setExtraLines(LineChartVO chart, YAxis yAxis) {
+        List<ExtraLine> list = chart.getExtraLines();
+        if (list == null || list.size() < 1) return;
+        for (int i = 0; i < list.size(); i++){
+            ExtraLine line = list.get(i);
+            LimitLine limitLine = new LimitLine(line.getyValue(), line.getLineName());
+            limitLine.setLineWidth(line.getLineWidth());
+            float solid = 10f;
+            if(line.isSolid()) solid = 0f;
+            limitLine.enableDashedLine(10f, solid, 0f);
+            limitLine.setLabelPosition(LimitLine.LimitLabelPosition.POS_RIGHT);
+            limitLine.setTextColor(line.getTextColor());
+            limitLine.setTextSize(line.getTextSize());
+            yAxis.addLimitLine(limitLine);
+        }
+    }
+
+
 }

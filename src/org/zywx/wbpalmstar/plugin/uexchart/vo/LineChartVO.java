@@ -5,6 +5,7 @@ import java.util.List;
 
 public class LineChartVO extends BaseChart implements Serializable{
     private static final long serialVersionUID = 4347585990596017640L;
+    private List<String> xData;
     private List<LineUnitData> lines;
 
     public List<LineUnitData> getLines() {
@@ -14,4 +15,13 @@ public class LineChartVO extends BaseChart implements Serializable{
     public void setLines(List<LineUnitData> lines) {
         this.lines = lines;
     }
+
+    public List<String> getxData() {
+        return xData;
+    }
+
+    public void setxData(List<String> xData) {
+        this.xData = xData;
+    }
+
 }

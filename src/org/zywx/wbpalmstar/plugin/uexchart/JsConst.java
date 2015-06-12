@@ -7,4 +7,6 @@ public class JsConst {
     public static final String PARAMS_LISTENER = "listener";
     public static final String LEGEND_BOTTOM = "bottom";
     public static final String LEGEND_RIGHT = "right";
+    public static final String MAX_VALUE = "maxValue";
+    public static final String MIN_VALUE = "minValue";
 }

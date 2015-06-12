@@ -5,22 +5,24 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.Legend;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.Highlight;
+import com.github.mikephil.charting.utils.PercentFormatter;
 
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+import org.zywx.wbpalmstar.plugin.uexchart.EUExChart.OnValueSelectedListener;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.PieChartVO;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.PieUnit;
-import org.zywx.wbpalmstar.plugin.uexchart.EUExChart.OnValueSelectedListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PieChartActivity extends Activity implements OnChartValueSelectedListener{
+public class PieChartActivity extends Activity implements OnChartValueSelectedListener {
 
     public static final String TAG = "PieChartActivity";
     private PieChart mChart;
@@ -43,15 +45,16 @@ public class PieChartActivity extends Activity implements OnChartValueSelectedLi
         initPieChartView(mData);
     }
 
-    private void setData(List<PieUnit> list) {
+    private void setData(PieChartVO chart) {
+        List<PieUnit> list = chart.getData();
         if(list == null || list.size() == 0){
             return;
         }
-        int lenght = list.size();
-        String[] titles = new String[lenght];
+        int length = list.size();
+        String[] titles = new String[length];
         ArrayList<Entry> entrys = new ArrayList<Entry>();
-        int[] colors = new int[lenght];
-        for (int i = 0; i < lenght; i++) {
+        int[] colors = new int[length];
+        for (int i = 0; i < length; i++) {
             PieUnit bean = list.get(i);
             titles[i] = bean.getTitle();
             entrys.add(new Entry(bean.getValue(), i));
@@ -59,7 +62,17 @@ public class PieChartActivity extends Activity implements OnChartValueSelectedLi
         }
         PieDataSet set1 = new PieDataSet(entrys, "");
         set1.setSliceSpace(3f);
+        set1.setDrawValues(chart.isShowValue());
+        set1.setValueTextColor(chart.getValueTextColor());
+        set1.setValueTextSize(chart.getValueTextSize());
         set1.setColors(colors);
+        if (chart.isShowPercent()){
+            set1.setValueFormatter(new PercentFormatter());
+        }else{
+            if (chart.isShowUnit()){
+                set1.setValueFormatter(new ValueUnitFormatter(chart.getUnit()));
+            }
+        }
         PieData data = new PieData(titles, set1);
         mChart.setData(data);
         // undo all highlights
@@ -74,13 +87,13 @@ public class PieChartActivity extends Activity implements OnChartValueSelectedLi
         mChart.setCenterTextSize(chart.getDescTextSize());
         mChart.setCenterTextColor(chart.getDescTextColor());
         mChart.setDescription(chart.getDesc());
-        mChart.setDrawLegend(chart.isShowLegend());//is show legend(tuli)
+        mChart.setDescriptionColor(chart.getDescTextColor());
+        mChart.setDescriptionTextSize(chart.getDescTextSize());
         mChart.setDrawHoleEnabled(chart.isShowCenter());//center circle part
         mChart.setDrawCenterText(chart.isShowCenter());
-        mChart.setDrawXValues(chart.isShowTitle());//is show title
-        mChart.setDrawYValues(chart.isShowValue());//is show value
-        mChart.setDrawUnitsInChart(chart.isShowUint());
-        mChart.setUnit(chart.getUnit());
+        mChart.setDrawSliceText(chart.isShowTitle());//is show title
+        //mChart.setDrawUnitsInChart(chart.isShowUint());
+        //mChart.setUnit(chart.getUnit());
         mChart.setBackgroundColor(chart.getBgColor());
         mChart.setHoleRadius(chart.getCenterRadius());
         mChart.setTransparentCircleRadius(chart.getCenterTransRadius());
@@ -91,32 +104,31 @@ public class PieChartActivity extends Activity implements OnChartValueSelectedLi
             mChart.setHoleColor(BUtility.parseColor(chart.getCenterColor()));
         }
         mChart.setUsePercentValues(chart.isShowPercent());
-
-        mChart.setValueTextColor(chart.getValueTextColor());
-        mChart.setValueTextSize(chart.getValueTextSize());
         
-        mChart.setDescriptionTextColor(chart.getDescTextColor());
         // add a selection listener
         mChart.setOnChartValueSelectedListener(this);
         mChart.setRotationAngle(0);
-        setData(chart.getData());
+        setData(chart);
         Legend l = mChart.getLegend();
+        l.setEnabled(chart.isShowLegend());//is show legend(tuli)
         l.setTextColor(chart.getDescTextColor());
+        l.setTextSize(chart.getDescTextSize());
         l.setPosition(chart.getLegendPosition());
         l.setXEntrySpace(7f);
         l.setYEntrySpace(5f);
     }
 
     @Override
-    public void onNothingSelected() {
-        
+    public void onValueSelected(Entry entry, int i, Highlight highlight) {
+        if(mListener != null){
+            entry.getXIndex();
+            mListener.onValueSelected(entry.getVal());
+        }
     }
 
     @Override
-    public void onValueSelected(Entry arg0, int arg1) {
-        if(mListener != null){
-            mListener.onValueSelected(arg0.getVal());
-        }
+    public void onNothingSelected() {
+        
     }
 
 }

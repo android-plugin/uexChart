@@ -21,10 +21,10 @@
     function openMultiBarChart(){
         var param = {
             id:2,
-            left:500,
+            left:10,
             top:700,
-            width:600,
-            height:600,
+            width:800,
+            height:800,
             bgColor:"#cccccc",
             showUnit:true,
             unit:"cc",
@@ -32,12 +32,15 @@
             valueTextSize:15,
             showValue:false,
             desc:"测试柱状图功能",
-            descTextColor:"#000000",
+            descTextColor:"#050",
             descTextSize:12,
             showLegend:true,
-            legendPosition:"right",
+            legendPosition:"bottom",
+            maxValue:20,
+            minValue:-20,
             duration:1800,
             isScrollWithWeb:true,
+            borderColor:"#eee",
             bars:
                 [
                     {
@@ -64,8 +67,19 @@
                             {xValue:2006,yValue:2}
                         ]
                     }
-                ]
-            };
+                ],
+            extraLines:[
+                {
+                    yValue:3.5,
+                    lineName:"平均值",
+                    lineColor:"#f00",
+                    textColor:"#f00",
+                    textSize:12,
+                    isSolid:false,
+                    lineWidth:4
+                }
+            ]
+        };
         var data1 = JSON.stringify(param);
         uexChart.openBarChart(data1);
         
@@ -76,11 +90,11 @@
             id:1,
             left:0,
             top:500,
-            width:600,
-            height:600,
+            width:800,
+            height:800,
             bgColor:"#00000000",
-            showUnit:true,
-            unit:"cc",
+            descTextColor:"#fff",
+            descTextSize:12,
             valueTextColor:"#000000",
             valueTextSize:15,
             duration:1800,
