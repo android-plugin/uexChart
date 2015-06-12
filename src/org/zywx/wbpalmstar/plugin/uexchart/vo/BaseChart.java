@@ -1,11 +1,12 @@
 package org.zywx.wbpalmstar.plugin.uexchart.vo;
 
-import com.github.mikephil.charting.utils.Legend.LegendPosition;
+import com.github.mikephil.charting.components.Legend.LegendPosition;
 
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.plugin.uexchart.JsConst;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class BaseChart implements Serializable {
     private static final long serialVersionUID = 7188055708964543242L;
@@ -29,13 +30,20 @@ public class BaseChart implements Serializable {
     private boolean showLegend = false;
     private String legendPosition = "bottom";
     private int duration = 1000;
-    private boolean showUint = false;
+    private boolean showUnit = false;
     private String unit = "";
     private boolean showValue = true;
     private String bgColor = "#00000000";
     private String valueTextColor = "#ffffff";
     private int valueTextSize = 13;
     private boolean isScrollWithWeb = false;
+    private String borderColor = "#000000";
+    private boolean isHasMax = false;
+    private boolean isHasMin = false;
+    private float maxValue;
+    private float minValue;
+    private List<ExtraLine> extraLines;
+
     public int getLeft() {
         return (int) left;
     }
@@ -107,12 +115,6 @@ public class BaseChart implements Serializable {
     public void setDuration(int duration) {
         this.duration = duration;
     }
-    public boolean isShowUint() {
-        return showUint;
-    }
-    public void setShowUint(boolean showUint) {
-        this.showUint = showUint;
-    }
     public String getUnit() {
         return unit;
     }
@@ -155,5 +157,61 @@ public class BaseChart implements Serializable {
 
     public void setIsScrollWithWeb(boolean isScrollWithWeb) {
         this.isScrollWithWeb = isScrollWithWeb;
+    }
+
+    public int getBorderColor() {
+        return BUtility.parseColor(borderColor);
+    }
+
+    public void setBorderColor(String borderColor) {
+        this.borderColor = borderColor;
+    }
+
+    public boolean isShowUnit() {
+        return showUnit;
+    }
+
+    public void setShowUnit(boolean showUnit) {
+        this.showUnit = showUnit;
+    }
+
+    public boolean isHasMax() {
+        return isHasMax;
+    }
+
+    public void setIsHasMax(boolean isHasMax) {
+        this.isHasMax = isHasMax;
+    }
+
+    public boolean isHasMin() {
+        return isHasMin;
+    }
+
+    public void setIsHasMin(boolean isHasMin) {
+        this.isHasMin = isHasMin;
+    }
+
+    public float getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(float maxValue) {
+        this.maxValue = maxValue;
+    }
+
+    public float getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(float minValue) {
+        this.minValue = minValue;
+    }
+
+    public List<ExtraLine> getExtraLines() {
+        return extraLines;
+    }
+
+    public void setExtraLines(List<ExtraLine> extraLines) {
+        this.extraLines = extraLines;
     }
 }

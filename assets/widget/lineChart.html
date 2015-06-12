@@ -21,10 +21,10 @@
     function openLineChart(){
         var param = {
             id:1,
-            left:500,
+            left:50,
             top:500,
-            width:600,
-            height:600,
+            width:800,
+            height:800,
             bgColor:"#00000000",
             showUnit:true,
             unit:"cc",
@@ -36,24 +36,49 @@
             showLegend:true,
             legendPosition:"bottom",
             duration:800,
+            xData:[2001,2002,2003,2004,2005,2006,2007,2008,2009,2010],
+            minValue:-3,
+            maxValue:12,
+            borderColor:"#ccc",
+            extraLines:[
+                {
+                    yValue:6.5,
+                    lineName:"及格",
+                    lineColor:"#f00",
+                    textColor:"#f00",
+                    textSize:12,
+                    isSolid:false,
+                    lineWidth:4
+                },
+                {
+                    yValue:8.9,
+                    lineName:"优秀",
+                    lineColor:"#0f0",
+                    textColor:"#0f0",
+                    textSize:12,
+                    isSolid:false,
+                    lineWidth:4
+              	}
+           	],
             lines:[
                 {
+                    cubicIntensity:0.2,
                     lineName:"line1",
-                    lineColor:"#ff6600",
+                    lineColor:"#ff0000",
                     lineWidth:2,
                     circleColor:"#ff6600",
                     circleSize:3,
                     isSolid:true,
                     data:[
-                        {xValue:2001,yValue:5},
-                        {xValue:2002,yValue:1},
-                        {xValue:2003,yValue:6},
+                        {xValue:2001,yValue:1.01234},
+                        {xValue:2002,yValue:3.03},
+                        {xValue:2003,yValue:2.05},
                         {xValue:2004,yValue:4},
                         {xValue:2005,yValue:2},
                         {xValue:2006,yValue:3},
                         {xValue:2007,yValue:8},
                         {xValue:2008,yValue:10},
-                        {xValue:2009,yValue:2},
+                        {xValue:2009,yValue:-1.2},
                         {xValue:2010,yValue:6}
                     ]
                 }
@@ -67,9 +92,9 @@
         var param = {
             id:2,
             left:0,
-            top:700,
-            width:600,
-            height:600,
+            top:500,
+            width:800,
+            height:800,
             bgColor:"#cccccc",
             showUnit:true,
             showValue:false,
@@ -83,6 +108,7 @@
             legendPosition:"right",
             duration:800,
             isScrollWithWeb:true,
+            xData:[2001,2002,2003,2004,2005,2006,2007,2008,2009,2010],
             lines:[
                 {
                     lineName:"line1",
@@ -95,9 +121,9 @@
                         {xValue:2001,yValue:5},
                         {xValue:2002,yValue:1},
                         {xValue:2003,yValue:6},
-                        {xValue:2004,yValue:4},
-                        {xValue:2005,yValue:2},
-                        {xValue:2006,yValue:3},
+                        //{xValue:2004,yValue:4},
+                        //{xValue:2005,yValue:2},
+                        //{xValue:2006,yValue:3},
                         {xValue:2007,yValue:8},
                         {xValue:2008,yValue:10},
                         {xValue:2009,yValue:2},
@@ -112,9 +138,9 @@
                     circleSize:4,
                     isSolid:false,
                     data:[
-                        {xValue:2001,yValue:10},
-                        {xValue:2002,yValue:3},
-                        {xValue:2003,yValue:3},
+                        //{xValue:2001,yValue:10},
+                        //{xValue:2002,yValue:3},
+                        //{xValue:2003,yValue:3},
                         {xValue:2004,yValue:2},
                         {xValue:2005,yValue:8},
                         {xValue:2006,yValue:2},

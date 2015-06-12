@@ -15,13 +15,16 @@ import android.widget.RelativeLayout;
 
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.BarChartVO;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.BaseChart;
+import org.zywx.wbpalmstar.plugin.uexchart.vo.BaseUnit;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.LineChartVO;
+import org.zywx.wbpalmstar.plugin.uexchart.vo.LineUnitData;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.PieChartVO;
 
 import java.io.Serializable;
@@ -213,12 +216,40 @@ public class EUExChart extends EUExBase {
     private void openLineChartMsg(String[] params) {
         String json = params[0];
         LineChartVO lineChartVO = DataHelper.gson.fromJson(json, LineChartVO.class);
-        if (lineChartVO == null){
+        if (lineChartVO == null || lineChartVO.getxData() == null
+                || lineChartVO.getxData().size() < 1
+                || lineChartVO.getLines() == null
+                || lineChartVO.getLines().size() < 1){
             return;
         }
         if (isViewAlreadyAdded(getViewTAG(LineChartActivity.TAG, lineChartVO.getId()))){
             return;
         }
+        for (int i = 0; i < lineChartVO.getLines().size(); i++){
+            final LineUnitData lineUnitData = lineChartVO.getLines().get(i);
+            for (int j = 0; j < lineUnitData.getData().size(); j++){
+                final BaseUnit unit = lineUnitData.getData().get(j);
+                final String xValue = unit.getxValue();
+                for (int m = 0; m < lineChartVO.getxData().size(); m++){
+                    final String x = lineChartVO.getxData().get(m);
+                    if (x.equals(xValue)){
+                        unit.setIndex(m);
+                    }
+                }
+            }
+        }
+        try {
+            JSONObject object = new JSONObject(json);
+            if (object.has(JsConst.MAX_VALUE)){
+                lineChartVO.setIsHasMax(true);
+            }
+            if (object.has(JsConst.MIN_VALUE)){
+                lineChartVO.setIsHasMin(true);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         Intent intent = new Intent();
         intent.setClass(mContext, LineChartActivity.class);
         intent.putExtra(JsConst.PARAMS_DATA_VO, lineChartVO);
@@ -363,7 +394,7 @@ public class EUExChart extends EUExBase {
         public void onValueSelected(float value) {
             JSONObject result = new JSONObject();
             try {
-                result.put(JsConst.VALUE, value);
+                result.put(JsConst.VALUE, value + "");
             } catch (Exception e) {
                 e.printStackTrace();
             }

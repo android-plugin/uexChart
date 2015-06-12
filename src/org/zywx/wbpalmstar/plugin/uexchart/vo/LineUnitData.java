@@ -1,6 +1,9 @@
 package org.zywx.wbpalmstar.plugin.uexchart.vo;
 
+import android.text.TextUtils;
+
 import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.plugin.uexchart.ChartUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,7 +16,33 @@ public class LineUnitData implements Serializable{
     private int circleSize = 4;
     private String lineName="";
     private boolean isSolid = true;
+    private float cubicIntensity = -1;
+    private String fillColor = null;
     private List<BaseUnit> data;
+
+    public void setCubicIntensity(float cubicIntensity) {
+        this.cubicIntensity = cubicIntensity;
+    }
+
+    public float getCubicIntensity() {
+        return cubicIntensity;
+    }
+
+    public int getFillColor() {
+        return BUtility.parseColor(fillColor);
+    }
+
+    public int getAlpha(){
+        return ChartUtils.getAlpha(fillColor);
+    }
+
+    public boolean isHasFillColor(){
+        return (!TextUtils.isEmpty(fillColor) && getAlpha() != 0) ? true : false;
+    }
+
+    public void setFillColor(String fillColor) {
+        this.fillColor = fillColor;
+    }
 
     public int getLineColor() {
         return BUtility.parseColor(lineColor);
