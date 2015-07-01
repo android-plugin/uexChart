@@ -42,12 +42,10 @@ public class EUExChart extends EUExBase {
     private static final int MSG_OPEN_BAR_CHART = 5;
     private static final int MSG_CLOSE_BAR_CHART = 6;
     private static final String TAG = "EUExChart";
-    private static LocalActivityManager mgr;
     private static List<BaseChart> mIDs = new ArrayList<BaseChart>();
 
     public EUExChart(Context context, EBrowserView eBrowserView) {
         super(context, eBrowserView);
-        mgr = ((ActivityGroup) mContext).getLocalActivityManager();
     }
 
     @Override
@@ -76,16 +74,14 @@ public class EUExChart extends EUExBase {
         if (pieChartVO == null){
             return;
         }
-        if (isViewAlreadyAdded(getViewTAG(PieChartActivity.TAG, pieChartVO.getId()))){
+        if (isViewAlreadyAdded(getViewTAG(PieChartView.TAG, pieChartVO.getId()))){
             return;
         }
-        Intent intent = new Intent();
-        intent.setClass(mContext, PieChartActivity.class);
-        intent.putExtra(JsConst.PARAMS_DATA_VO, pieChartVO);
-        intent.putExtra(JsConst.PARAMS_LISTENER, listener);
-        String id = getViewTAG(PieChartActivity.TAG, pieChartVO.getId());
-        Window window = mgr.startActivity(id, intent);
-        View decorView = window.getDecorView();
+        PieChartView pieChartView=new PieChartView(mContext,pieChartVO);
+        pieChartView.setmListener(listener);
+        String id = getViewTAG(PieChartView.TAG, pieChartVO.getId());
+        pieChartView.setTag(id);
+        pieChartView.setId(id.hashCode());
         if (pieChartVO.isScrollWithWeb()){
             android.widget.AbsoluteLayout.LayoutParams lp = new
                     android.widget.AbsoluteLayout.LayoutParams(
@@ -93,13 +89,13 @@ public class EUExChart extends EUExBase {
                     pieChartVO.getHeight(),
                     pieChartVO.getLeft(),
                     pieChartVO.getTop());
-            addViewToWebView(decorView, lp, id);
+            addViewToWebView(pieChartView, lp, id);
         }else{
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                     pieChartVO.getWidth(), pieChartVO.getHeight());
             lp.leftMargin = pieChartVO.getLeft();
             lp.topMargin = pieChartVO.getTop();
-            addView2CurrentWindow(decorView, lp);
+            addView2CurrentWindow(pieChartView, lp);
         }
         pieChartVO.setId(id);
         mIDs.add(pieChartVO);
@@ -130,7 +126,7 @@ public class EUExChart extends EUExBase {
     }
 
     private void closePieChartMsg(String[] params) {
-        closeChart(params, PieChartActivity.TAG);
+        closeChart(params, PieChartView.TAG);
     }
 
     private void closeChart(String[] params, String tag){
@@ -163,7 +159,6 @@ public class EUExChart extends EUExBase {
                     }else{
                         removeChartView(id);
                     }
-                    mgr.destroyActivity(id, true);
                     removeIdFormIDs(item);
                 }
             }
@@ -171,9 +166,17 @@ public class EUExChart extends EUExBase {
     }
 
     private void removeChartView(String id){
-        View view = mgr.getActivity(id).getWindow().getDecorView();
-        if (view.getParent() != null) {
-            ((ViewGroup)view.getParent()).removeView(view);
+        if (id==null){
+            return;
+        }
+        int childCount=mBrwView.getBrowserWindow().getChildCount();
+        if (childCount>0){
+            for (int i=childCount-1;i>=0;i--){
+                View child=mBrwView.getBrowserWindow().getChildAt(i);
+                if (child!=null&&child.getId()==id.hashCode()){
+                    mBrwView.getBrowserWindow().removeViewAt(i);
+                }
+            }
         }
     }
 
@@ -222,7 +225,7 @@ public class EUExChart extends EUExBase {
                 || lineChartVO.getLines().size() < 1){
             return;
         }
-        if (isViewAlreadyAdded(getViewTAG(LineChartActivity.TAG, lineChartVO.getId()))){
+        if (isViewAlreadyAdded(getViewTAG(LineChartView.TAG, lineChartVO.getId()))){
             return;
         }
         for (int i = 0; i < lineChartVO.getLines().size(); i++){
@@ -249,14 +252,11 @@ public class EUExChart extends EUExBase {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        Intent intent = new Intent();
-        intent.setClass(mContext, LineChartActivity.class);
-        intent.putExtra(JsConst.PARAMS_DATA_VO, lineChartVO);
-        intent.putExtra(JsConst.PARAMS_LISTENER, listener);
-        String id = getViewTAG(LineChartActivity.TAG, lineChartVO.getId());
-        Window window = mgr.startActivity(id, intent);
-        View decorView = window.getDecorView();
+        LineChartView lineChartView=new LineChartView(mContext,lineChartVO);
+        lineChartView.setmListener(listener);
+        String id = getViewTAG(LineChartView.TAG, lineChartVO.getId());
+        lineChartView.setTag(id);
+        lineChartView.setId(id.hashCode());
         if (lineChartVO.isScrollWithWeb()){
             android.widget.AbsoluteLayout.LayoutParams lp = new
                     android.widget.AbsoluteLayout.LayoutParams(
@@ -264,13 +264,13 @@ public class EUExChart extends EUExBase {
                     lineChartVO.getHeight(),
                     lineChartVO.getLeft(),
                     lineChartVO.getTop());
-            addViewToWebView(decorView, lp, id);
+            addViewToWebView(lineChartView, lp, id);
         }else{
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                     lineChartVO.getWidth(), lineChartVO.getHeight());
             lp.leftMargin = lineChartVO.getLeft();
             lp.topMargin = lineChartVO.getTop();
-            addView2CurrentWindow(decorView, lp);
+            addView2CurrentWindow(lineChartView, lp);
         }
         lineChartVO.setId(id);
         mIDs.add(lineChartVO);
@@ -287,7 +287,7 @@ public class EUExChart extends EUExBase {
     }
 
     private void closeLineChartMsg(String[] params) {
-        closeChart(params, LineChartActivity.TAG);
+        closeChart(params, LineChartView.TAG);
     }
 
     public void openBarChart(String[] params) {
@@ -310,16 +310,14 @@ public class EUExChart extends EUExBase {
         if (barChartVO == null){
             return;
         }
-        if (isViewAlreadyAdded(getViewTAG(BarChartActivity.TAG, barChartVO.getId()))){
+        if (isViewAlreadyAdded(getViewTAG(BarChartView.TAG, barChartVO.getId()))){
             return;
         }
-        Intent intent = new Intent();
-        intent.setClass(mContext, BarChartActivity.class);
-        intent.putExtra(JsConst.PARAMS_DATA_VO, barChartVO);
-        intent.putExtra(JsConst.PARAMS_LISTENER, listener);
-        String id = getViewTAG(BarChartActivity.TAG, barChartVO.getId());
-        Window window = mgr.startActivity(id, intent);
-        View decorView = window.getDecorView();
+        BarChartView barChartView=new BarChartView(mContext,barChartVO);
+        barChartView.setmListener(listener);
+        String id = getViewTAG(BarChartView.TAG, barChartVO.getId());
+        barChartView.setTag(id);
+        barChartView.setId(id.hashCode());//view加到window里面时引擎使用了tag，因此用id来标识
         if (barChartVO.isScrollWithWeb()){
             android.widget.AbsoluteLayout.LayoutParams lp = new
                     android.widget.AbsoluteLayout.LayoutParams(
@@ -327,13 +325,13 @@ public class EUExChart extends EUExBase {
                     barChartVO.getHeight(),
                     barChartVO.getLeft(),
                     barChartVO.getTop());
-            addViewToWebView(decorView, lp, id);
+            addViewToWebView(barChartView, lp, id);
         }else{
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                     barChartVO.getWidth(), barChartVO.getHeight());
             lp.leftMargin = barChartVO.getLeft();
             lp.topMargin = barChartVO.getTop();
-            addView2CurrentWindow(decorView, lp);
+            addView2CurrentWindow(barChartView, lp);
         }
         barChartVO.setId(id);
         mIDs.add(barChartVO);
@@ -350,7 +348,7 @@ public class EUExChart extends EUExBase {
     }
 
     private void closeBarChartMsg(String[] params) {
-        closeChart(params, BarChartActivity.TAG);
+        closeChart(params, BarChartView.TAG);
     }
 
     @Override
@@ -407,9 +405,30 @@ public class EUExChart extends EUExBase {
     }
 
     private String getViewTAG(String tag, String id){
-        return tag + id;
+        return tag+id;
     }
     private boolean isViewAlreadyAdded(String tag) {
-        return mgr.getActivity(tag) != null;
+        if (tag==null){
+            return false;
+        }
+        boolean isAdded=false;
+        int childCount=mBrwView.getBrowserWindow().getChildCount();
+        if (childCount>0){
+            for (int i=0;i<childCount;i++){
+
+                if (tag.hashCode()==mBrwView.getBrowserWindow().getChildAt(i).getId()){
+                    return true;
+                }
+            }
+        }
+        int webviewChildCount=mBrwView.getChildCount();
+        if (webviewChildCount>0){
+            for (int i = 0; i < webviewChildCount; i++) {
+                if (tag.equals(mBrwView.getChildAt(i).getTag())){
+                    return true;
+                }
+            }
+        }
+        return isAdded;
     }
 }
