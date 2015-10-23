@@ -50,9 +50,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="org.zywx.wbpalmstar.plugin.uexchart.PieChartActivity"></activity>
-        <activity android:name="org.zywx.wbpalmstar.plugin.uexchart.LineChartActivity"></activity>
-        <activity android:name="org.zywx.wbpalmstar.plugin.uexchart.BarChartActivity"></activity>
         <receiver
             android:name="org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver">
             <intent-filter>
