@@ -73,8 +73,8 @@
                         {xValue:2001,yValue:1.01234},
                         {xValue:2002,yValue:3.03},
                         {xValue:2003,yValue:2.05},
-                        {xValue:2004,yValue:4},
-                        {xValue:2005,yValue:2},
+                        //{xValue:2004,yValue:4},
+                        //{xValue:2005,yValue:2},
                         {xValue:2006,yValue:3},
                         {xValue:2007,yValue:8},
                         {xValue:2008,yValue:10},
@@ -82,7 +82,16 @@
                         {xValue:2010,yValue:6}
                     ]
                 }
-            ]
+            ],
+            option:{
+                initZoomX:2,
+                initZoomY:1,
+                initPositionX:0,
+                initPositionY:0,
+                isSupportDrag:true,
+                isSupportZoomX:true,
+                isSupportZoomY:false
+            }
         };
         var data1 = JSON.stringify(param);
         uexChart.openLineChart(data1);
@@ -150,7 +159,16 @@
                         {xValue:2010,yValue:4}
                     ]
                 }
-            ]
+            ],
+            option:{
+                initZoomX:3,
+                initZoomY:1,
+                initPositionX:0,
+                initPositionY:0,
+                isSupportDrag:true,
+                isSupportZoomX:true,
+                isSupportZoomY:false
+            }
         };
         var data1 = JSON.stringify(param);
         uexChart.openLineChart(data1);

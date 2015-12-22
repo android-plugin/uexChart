@@ -2,6 +2,7 @@ package org.zywx.wbpalmstar.plugin.uexchart;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -25,6 +26,8 @@ import org.zywx.wbpalmstar.plugin.uexchart.vo.BarChartVO;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.BarUnitData;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.BaseUnit;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.ExtraLine;
+import org.zywx.wbpalmstar.plugin.uexchart.vo.OptionVO;
+import org.zywx.wbpalmstar.plugin.uexchart.vo.ResultValueSelectedVO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +63,7 @@ public class BarChartView extends FrameLayout implements OnChartValueSelectedLis
         mChart.setDrawGridBackground(true);
         mChart.setGridBackgroundColor(Color.TRANSPARENT);
 
-
+        mChart.setMaxVisibleValueCount(7);
         mChart.setDescription(chart.getDesc());
         mChart.setDescriptionColor(chart.getDescTextColor());
         mChart.setDescriptionTextSize(chart.getDescTextSize());
@@ -69,6 +72,15 @@ public class BarChartView extends FrameLayout implements OnChartValueSelectedLis
         mChart.setBorderColor(chart.getBorderColor());
         // if disabled, scaling can be done on x- and y-axis separately
         mChart.animateY(chart.getDuration());
+
+        OptionVO optionVO = chart.getOption();
+        if (optionVO != null){
+            mChart.zoom(optionVO.getInitZoomX(), optionVO.getInitZoomY(),
+                    optionVO.getInitPositionX(), optionVO.getInitPositionY());
+            mChart.setDragEnabled(optionVO.isSupportDrag());
+            mChart.setScaleXEnabled(optionVO.isSupportZoomX());
+            mChart.setScaleYEnabled(optionVO.isSupportZoomY());
+        }
 
         //djf
         //mChart.setDrawUnitsInChart(chart.isShowUint());
@@ -112,23 +124,36 @@ public class BarChartView extends FrameLayout implements OnChartValueSelectedLis
     }
 
     private void setData(BarChartVO chart) {
+        List<String> xDatas = chart.getxData();
         List<BarUnitData> list = chart.getBars();
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         ArrayList<String> xVals = new ArrayList<String>();
+
         for (int j = 0; j < list.size(); j++) {
             BarUnitData bar = list.get(j);
             List<BaseUnit> datas = bar.getData();
-            for (int i = 0; i < datas.size(); i++) {
-                String title = datas.get(i).getxValue();
-                if(!xVals.contains(title)){
-                    xVals.add(title);
+            if (xDatas != null){
+                for (int i = 0; i < xDatas.size(); i++) {
+                    String title = xDatas.get(i);
+                    if(!xVals.contains(title)){
+                        xVals.add(title);
+                    }
+                }
+            }else{
+                for (int i = 0; i < datas.size(); i++) {
+                    String title = datas.get(i).getxValue();
+                    if(!xVals.contains(title)){
+                        xVals.add(title);
+                    }
                 }
             }
 
             ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
 
             for (int i = 0; i < datas.size(); i++) {
-                yVals.add(new BarEntry(datas.get(i).getyValue(), i));
+                if (xVals.contains(datas.get(i).getxValue())){
+                    yVals.add(new BarEntry(datas.get(i).getyValue(), datas.get(i).getIndex()));
+                }
             }
 
             // create a dataset and give it a type
@@ -152,7 +177,11 @@ public class BarChartView extends FrameLayout implements OnChartValueSelectedLis
     @Override
     public void onValueSelected(Entry entry, int i, Highlight highlight) {
         if(mListener != null){
-            mListener.onValueSelected(entry.getVal());
+            ResultValueSelectedVO result = new ResultValueSelectedVO();
+            result.setValue(String.valueOf(entry.getVal()));
+            result.setDataSetIndex(String.valueOf(i));
+            result.setxIndex(String.valueOf(entry.getXIndex()));
+            mListener.onValueSelected(result);
         }
     }
 

@@ -109,11 +109,26 @@
                                 {xValue:2003,yValue:6},
                                 {xValue:2004,yValue:4},
                                 {xValue:2005,yValue:2},
-                                {xValue:2006,yValue:3}
+                                {xValue:2006,yValue:3},
+                                {xValue:2007,yValue:5},
+                                {xValue:2008,yValue:1},
+                                {xValue:2009,yValue:6},
+                                {xValue:2010,yValue:4},
+                                {xValue:2011,yValue:2},
+                                {xValue:2012,yValue:3}
                             ]
-                        }
-                    ]
-                };
+                    }
+            ],
+            option:{
+                initZoomX:2,
+                initZoomY:1,
+                initPositionX:0,
+                initPositionY:0,
+                isSupportDrag:true,
+                isSupportZoomX:true,
+                isSupportZoomY:false
+            }
+        };
         var data1 = JSON.stringify(param);
         uexChart.openBarChart(data1);
     }

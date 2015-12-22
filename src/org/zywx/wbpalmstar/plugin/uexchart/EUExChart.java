@@ -16,11 +16,13 @@ import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.BarChartVO;
+import org.zywx.wbpalmstar.plugin.uexchart.vo.BarUnitData;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.BaseChart;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.BaseUnit;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.LineChartVO;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.LineUnitData;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.PieChartVO;
+import org.zywx.wbpalmstar.plugin.uexchart.vo.ResultValueSelectedVO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -214,8 +216,7 @@ public class EUExChart extends EUExBase {
     private void openLineChartMsg(String[] params) {
         String json = params[0];
         LineChartVO lineChartVO = DataHelper.gson.fromJson(json, LineChartVO.class);
-        if (lineChartVO == null || lineChartVO.getxData() == null
-                || lineChartVO.getxData().size() < 1
+        if (lineChartVO == null
                 || lineChartVO.getLines() == null
                 || lineChartVO.getLines().size() < 1){
             return;
@@ -228,11 +229,15 @@ public class EUExChart extends EUExBase {
             for (int j = 0; j < lineUnitData.getData().size(); j++){
                 final BaseUnit unit = lineUnitData.getData().get(j);
                 final String xValue = unit.getxValue();
-                for (int m = 0; m < lineChartVO.getxData().size(); m++){
-                    final String x = lineChartVO.getxData().get(m);
-                    if (x.equals(xValue)){
-                        unit.setIndex(m);
+                if (lineChartVO.getxData() != null){
+                    for (int m = 0; m < lineChartVO.getxData().size(); m++){
+                        final String x = lineChartVO.getxData().get(m);
+                        if (x.equals(xValue)){
+                            unit.setIndex(m);
+                        }
                     }
+                }else{
+                    unit.setIndex(j);
                 }
             }
         }
@@ -248,7 +253,7 @@ public class EUExChart extends EUExBase {
             e.printStackTrace();
         }
         LineChartView lineChartView=new LineChartView(mContext,lineChartVO);
-        lineChartView.setmListener(listener);
+        lineChartView.setListener(listener);
         String id = getViewTAG(LineChartView.TAG, lineChartVO.getId());
         lineChartView.setTag(id);
         lineChartView.setId(id.hashCode());
@@ -302,13 +307,35 @@ public class EUExChart extends EUExBase {
     private void openBarChartMsg(String[] params) {
         String json = params[0];
         BarChartVO barChartVO = DataHelper.gson.fromJson(json, BarChartVO.class);
-        if (barChartVO == null){
+        if (barChartVO == null ||
+                barChartVO.getBars() == null ||
+                barChartVO.getBars().size() < 1){
             return;
         }
         if (isViewAlreadyAdded(getViewTAG(BarChartView.TAG, barChartVO.getId()))){
             return;
         }
-        BarChartView barChartView=new BarChartView(mContext,barChartVO);
+        for (int i = 0; i < barChartVO.getBars().size(); i++){
+            final BarUnitData barUnitData = barChartVO.getBars().get(i);
+            for (int j = 0; j < barUnitData.getData().size(); j++){
+                final BaseUnit unit = barUnitData.getData().get(j);
+                final String xValue = unit.getxValue();
+                if (barChartVO.getxData() != null){
+                    for (int m = 0; m < barChartVO.getxData().size(); m++){
+                        final String x = barChartVO.getxData().get(m);
+                        if (x.equals(xValue)){
+                            unit.setIndex(m);
+                        }
+                    }
+                }else{
+                    unit.setIndex(j);
+                }
+
+            }
+        }
+
+
+        BarChartView barChartView = new BarChartView(mContext,barChartVO);
         barChartView.setmListener(listener);
         String id = getViewTAG(BarChartView.TAG, barChartVO.getId());
         barChartView.setTag(id);
@@ -384,19 +411,15 @@ public class EUExChart extends EUExBase {
     OnValueSelectedListener listener = new OnValueSelectedListener() {
 
         @Override
-        public void onValueSelected(float value) {
-            JSONObject result = new JSONObject();
-            try {
-                result.put(JsConst.VALUE, value + "");
-            } catch (Exception e) {
-                e.printStackTrace();
+        public void onValueSelected(ResultValueSelectedVO result) {
+            if (result != null){
+                callBackPluginJs(JsConst.ON_VALUE_SELECTED, DataHelper.gson.toJson(result));
             }
-            callBackPluginJs(JsConst.ON_VALUE_SELECTED, result.toString());
         }
     };
 
     public interface OnValueSelectedListener extends Serializable{
-        public void onValueSelected(float value);
+        public void onValueSelected(ResultValueSelectedVO result);
     }
 
     private String getViewTAG(String tag, String id){

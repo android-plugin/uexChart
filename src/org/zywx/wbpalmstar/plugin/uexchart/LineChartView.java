@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -26,6 +27,8 @@ import org.zywx.wbpalmstar.plugin.uexchart.vo.BaseUnit;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.ExtraLine;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.LineChartVO;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.LineUnitData;
+import org.zywx.wbpalmstar.plugin.uexchart.vo.OptionVO;
+import org.zywx.wbpalmstar.plugin.uexchart.vo.ResultValueSelectedVO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,17 +61,29 @@ public class LineChartView extends FrameLayout implements OnChartValueSelectedLi
         for (int j = 0; j < list.size(); j++) {
             LineUnitData line = list.get(j);
             List<BaseUnit> datas = line.getData();
-            for (int i = 0; i < xDatas.size(); i++) {
-                String title = xDatas.get(i);
-                if(!xVals.contains(title)){
-                    xVals.add(title);
+            if (xDatas != null){
+                for (int i = 0; i < xDatas.size(); i++) {
+                    String title = xDatas.get(i);
+                    if(!xVals.contains(title)){
+                        xVals.add(title);
+                    }
+                }
+            }else{
+                for (int i = 0; i < datas.size(); i++){
+                    String title = datas.get(i).getxValue();
+                    if (!xVals.contains(title)){
+                        xVals.add(title);
+                    }
                 }
             }
+
 
             ArrayList<Entry> yVals = new ArrayList<Entry>();
 
             for (int i = 0; i < datas.size(); i++) {
-                yVals.add(new Entry(datas.get(i).getyValue(), datas.get(i).getIndex()));
+                if(xVals.contains(datas.get(i).getxValue())){
+                    yVals.add(new Entry(datas.get(i).getyValue(), datas.get(i).getIndex()));
+                }
             }
 
             // create a dataset and give it a type
@@ -105,14 +120,18 @@ public class LineChartView extends FrameLayout implements OnChartValueSelectedLi
     }
 
 
-    public void setmListener(OnValueSelectedListener mListener) {
+    public void setListener(OnValueSelectedListener mListener) {
         this.mListener = mListener;
     }
 
     @Override
     public void onValueSelected(Entry entry, int i, Highlight highlight) {
         if(mListener != null){
-            mListener.onValueSelected(entry.getVal());
+            ResultValueSelectedVO result = new ResultValueSelectedVO();
+            result.setValue(String.valueOf(entry.getVal()));
+            result.setDataSetIndex(String.valueOf(i));
+            result.setxIndex(String.valueOf(entry.getXIndex()));
+            mListener.onValueSelected(result);
         }
     }
 
@@ -132,6 +151,15 @@ public class LineChartView extends FrameLayout implements OnChartValueSelectedLi
         mChart.setBackgroundColor(chart.getBgColor());
         mChart.setDrawBorders(true);
         mChart.setBorderColor(chart.getBorderColor());
+
+        OptionVO optionVO = chart.getOption();
+        if (optionVO != null){
+            mChart.zoom(optionVO.getInitZoomX(), optionVO.getInitZoomY(),
+                    optionVO.getInitPositionX(), optionVO.getInitPositionY());
+            mChart.setDragEnabled(optionVO.isSupportDrag());
+            mChart.setScaleXEnabled(optionVO.isSupportZoomX());
+            mChart.setScaleYEnabled(optionVO.isSupportZoomY());
+        }
         setData(chart);
         Legend l = mChart.getLegend();
         l.setEnabled(chart.isShowLegend());

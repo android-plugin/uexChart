@@ -1,9 +1,8 @@
 package org.zywx.wbpalmstar.plugin.uexchart;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
@@ -21,6 +20,7 @@ import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.plugin.uexchart.EUExChart.OnValueSelectedListener;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.PieChartVO;
 import org.zywx.wbpalmstar.plugin.uexchart.vo.PieUnit;
+import org.zywx.wbpalmstar.plugin.uexchart.vo.ResultValueSelectedVO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,8 +119,11 @@ public class PieChartView extends FrameLayout implements OnChartValueSelectedLis
     @Override
     public void onValueSelected(Entry entry, int i, Highlight highlight) {
         if(mListener != null){
-            entry.getXIndex();
-            mListener.onValueSelected(entry.getVal());
+            ResultValueSelectedVO result = new ResultValueSelectedVO();
+            result.setValue(String.valueOf(entry.getVal()));
+            result.setDataSetIndex(String.valueOf(i));
+            result.setxIndex(String.valueOf(entry.getXIndex()));
+            mListener.onValueSelected(result);
         }
     }
 
