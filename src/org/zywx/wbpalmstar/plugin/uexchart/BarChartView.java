@@ -178,6 +178,7 @@ public class BarChartView extends FrameLayout implements OnChartValueSelectedLis
     public void onValueSelected(Entry entry, int i, Highlight highlight) {
         if(mListener != null){
             ResultValueSelectedVO result = new ResultValueSelectedVO();
+            result.setId(String.valueOf(mChart.getId()));// 在回调的json数据中添加图表id字段_change_by_waka_2016/01/22
             result.setValue(String.valueOf(entry.getVal()));
             result.setDataSetIndex(String.valueOf(i));
             result.setxIndex(String.valueOf(entry.getXIndex()));
