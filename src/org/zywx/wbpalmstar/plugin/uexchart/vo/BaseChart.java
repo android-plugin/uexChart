@@ -18,8 +18,17 @@ public class BaseChart implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
+    
+    public String getId_number() {
+		return id_number;
+	}
+    
+    public void setId_number(String id_number) {
+		this.id_number = id_number;
+	}
 
     private String id;
+    private String id_number;// 数字id，因为原id原作者加了tag进行区分，而且不能改动，所以手动添加数字id_by_waka_2016-01-25
     private double left = 0;
     private double top = 200;
     private double width = 1000;
