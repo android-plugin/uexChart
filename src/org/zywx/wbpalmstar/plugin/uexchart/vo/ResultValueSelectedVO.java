@@ -7,6 +7,7 @@ public class ResultValueSelectedVO implements Serializable{
     private String value;
     private String dataSetIndex;
     private String xIndex;
+    private String id;// 图表id change by waka 2016/01/22
 
     public String getValue() {
         return value;
@@ -31,4 +32,12 @@ public class ResultValueSelectedVO implements Serializable{
     public void setxIndex(String xIndex) {
         this.xIndex = xIndex;
     }
+    
+    public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 }
