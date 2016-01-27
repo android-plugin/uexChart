@@ -3,6 +3,7 @@ package org.zywx.wbpalmstar.plugin.uexchart;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -94,6 +95,7 @@ public class EUExChart extends EUExBase {
             lp.topMargin = pieChartVO.getTop();
             addView2CurrentWindow(pieChartView, lp);
         }
+        pieChartVO.setId_number(pieChartVO.getId());// 添加数字id，保证id不加tag_by_waka_2016-01-25
         pieChartVO.setId(id);
         mIDs.add(pieChartVO);
     }
@@ -272,6 +274,7 @@ public class EUExChart extends EUExBase {
             lp.topMargin = lineChartVO.getTop();
             addView2CurrentWindow(lineChartView, lp);
         }
+        lineChartVO.setId_number(lineChartVO.getId());// 添加数字id，保证id不加tag_by_waka_2016-01-25
         lineChartVO.setId(id);
         mIDs.add(lineChartVO);
     }
@@ -355,6 +358,7 @@ public class EUExChart extends EUExBase {
             lp.topMargin = barChartVO.getTop();
             addView2CurrentWindow(barChartView, lp);
         }
+        barChartVO.setId_number(barChartVO.getId());// 添加数字id，保证id不加tag_by_waka_2016-01-25
         barChartVO.setId(id);
         mIDs.add(barChartVO);
     }
