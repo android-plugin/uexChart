@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexChart" version="3.0.4" build="4">
-		<info>4:修复了获取id与iOS不符的问题 </info>
+        uexName="uexChart" version="4.0.0" build="5">
+		<info>5:4.0插件 </info>
+        <build>4:修复了获取id与iOS不符的问题 </build>
         <build>3.1:在图表中元素被点击的监听方法onValueSelected中增加了图表id字段，用来区分图表
               3.2:修复了id获取不对的问题</build>
         <build>2:openBarChart和openLineChart新增option配置参数</build>
